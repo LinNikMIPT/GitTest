@@ -6,23 +6,19 @@ int dim;  /*Space dimension*/
 
 class matrix;
 
-class vector
+class Vector
 {
-	double *vec = new double[dim];
+	double* vec;
 
 public:
-	vector()  /*Constructor*/
+	Vector()  /*Constructor*/
 	{
+		vec = new double[dim];
 		for (int i = 0; i < dim; i++)
 			vec[i] = 0.0;
 	};
 
-	~vector() /*Destructor*/
-	{
-			delete[] vec;
-	};
-
-	friend vector MxV(matrix m, vector v);  /*Friendly matrix-vector multiplication function*/
+	friend Vector MxV(matrix m, Vector v);  /*Friendly matrix-vector multiplication function*/
 
 	double len()  /*vector length |v|(orthonormal basis)*/
 	{
@@ -33,23 +29,23 @@ public:
 	}
 
 
-	vector operator+(const vector& v)  /*Sum v1 + v2*/
+	Vector operator+(const Vector& v)  /*Sum v1 + v2*/
 	{
-		vector res;
+		Vector res;
 		for (int i = 0; i < dim; i++)
 			res.vec[i] = v.vec[i] + vec[i];
 		return res;
 	}
 
-	vector operator-(const vector& v)  /*Diff v1 - v2*/
+	Vector operator-(const Vector& v)  /*Diff v1 - v2*/
 	{
-		vector res;
+		Vector res;
 		for (int i = 0; i < dim; i++)
 			res.vec[i] = vec[i] - v.vec[i];
 		return res;
 	}
 
-	double operator*(const vector& v)  /*dot product of vectors v1 * v2 (orthonormal basis)*/
+	double operator*(const Vector& v)  /*dot product of vectors v1 * v2 (orthonormal basis)*/
 	{
 		double res = 0;
 		for (int i = 0; i < dim; i++)
@@ -57,7 +53,7 @@ public:
 		return res;
 	}
 
-	bool operator==(vector v)  /*Comparison of vector modules |v1| == |v2|*/
+	bool operator==(Vector v)  /*Comparison of vector modules |v1| == |v2|*/
 	{
 		if (v.len() == this->len())
 			return true;
@@ -65,7 +61,7 @@ public:
 			return false;
 	}
 
-	bool operator>(vector v)  /*Comparison of vector modules |v1| > |v2|*/
+	bool operator>(Vector v)  /*Comparison of vector modules |v1| > |v2|*/
 	{
 		if (v.len() > this->len())
 			return true;
@@ -73,7 +69,7 @@ public:
 			return false;
 	}
 
-	bool operator<(vector v)  /*Comparison of vector modules |v1| < |v2|*/
+	bool operator<(Vector v)  /*Comparison of vector modules |v1| < |v2|*/
 	{
 		if (v.len() < this->len())
 			return true;
@@ -81,25 +77,30 @@ public:
 			return false;
 	}
 
-	friend ostream &operator <<(ostream &stream, vector v)  /*Output*/
+	friend ostream &operator <<(ostream &stream, Vector v)  /*Output*/
 	{
 		for (int i = 0; i < dim; i++)
 			stream << v.vec[i] << " ";
 		return stream;
 	}
 
-	friend istream &operator >>(istream &stream, vector &v)  /*Input*/
+	friend istream &operator >>(istream &stream, Vector &v)  /*Input*/
 	{
 		for (int i = 0; i < dim; i++)
 			stream >> v.vec[i];
 		return stream;
 	}
+
+	~Vector() /*Destructor*/
+	{
+		delete[] vec;
+	};
 };
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 
 class matrix
 {
-	int **mat = new int*[dim];
+	int** mat;
 
 public:
 	matrix()                          /* Constructor */
@@ -117,7 +118,7 @@ public:
 		cout << "Matrix deleted" << endl;
 	}
 
-	friend vector MxV(matrix m, vector v);  /*Friendly matrix-vector multiplication function*/
+	friend Vector MxV(matrix m, Vector v);  /*Friendly matrix-vector multiplication function*/
 
 	matrix T()  /*Matrix transpose*/
 	{
@@ -314,9 +315,9 @@ public:
 };
 /*-----------------------------------------------------------------------------------------------------------------------------------------*/
 
-vector MxV(matrix m, vector v)  /*Matrix-vector multiplication function*/
+Vector MxV(matrix m, Vector v)  /*Matrix-vector multiplication function*/
 {
-	vector res;
+	Vector res;
 	double x;
 
 	for (int i = 0; i < dim; i++)
@@ -336,7 +337,7 @@ int main()
 	cout << endl;
 
 	cout << "VECTOR---------------------------------------------------------------------------------------------------" << endl;
-	vector v1, v2;
+	Vector v1, v2;
 	cout << "Enter vector_1:" << endl;
 	cin >> v1;
 	cout << "Enter vector_2:" << endl;
